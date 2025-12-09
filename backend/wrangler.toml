@@ -58,7 +58,7 @@ ENVIRONMENT = "production"
 # TELEGRAM_BOT_TOKEN - Set via: wrangler secret put TELEGRAM_BOT_TOKEN
 # MAILCHANNELS_API_KEY - Set via: wrangler secret put MAILCHANNELS_API_KEY
 # ENCRYPTION_KEY - Set via: wrangler secret put ENCRYPTION_KEY
-FRONTEND_URL = "https://c1477c58.upto-frontend.pages.dev"
+FRONTEND_URL = "https://uptocloudflare2.pages.dev"
 FROM_EMAIL = "noreply@upto.dev"  # TODO: Update with your verified domain
 
 # Development environment
