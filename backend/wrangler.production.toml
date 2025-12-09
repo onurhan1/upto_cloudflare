@@ -1,0 +1,70 @@
+# Cloudflare Workers Configuration for Upto Backend - PRODUCTION
+# This is a template - fill in the IDs after creating resources
+
+name = "upto-backend"
+main = "src/index.ts"
+compatibility_date = "2024-01-01"
+compatibility_flags = ["nodejs_compat"]
+
+# D1 Database - Production
+[[d1_databases]]
+binding = "DB"
+database_name = "upto-db"
+database_id = "" # TODO: Fill after: wrangler d1 create upto-db
+
+# KV Namespaces - Production
+[[kv_namespaces]]
+binding = "STATUS_SNAPSHOTS"
+id = "" # TODO: Fill after: wrangler kv:namespace create STATUS_SNAPSHOTS
+
+[[kv_namespaces]]
+binding = "STATUS_PAGE_CACHE"
+id = "" # TODO: Fill after: wrangler kv:namespace create STATUS_PAGE_CACHE
+
+[[kv_namespaces]]
+binding = "RATE_LIMIT_STORE"
+id = "" # TODO: Fill after: wrangler kv:namespace create RATE_LIMIT_STORE
+
+# Durable Objects
+[[durable_objects.bindings]]
+name = "SERVICE_STATE"
+class_name = "ServiceStateObject"
+script_name = "upto-backend"
+
+# Queues
+[[queues.producers]]
+queue = "monitoring-queue"
+binding = "MONITORING_QUEUE"
+
+[[queues.consumers]]
+queue = "monitoring-queue"
+max_batch_size = 10
+max_batch_timeout = 5
+max_retries = 3
+
+# R2 Buckets
+[[r2_buckets]]
+binding = "STATIC_ASSETS"
+bucket_name = "upto-static-assets"
+
+# Cron Triggers
+[triggers]
+crons = ["*/1 * * * *"] # Every minute
+
+# Production Environment Variables
+# Secrets are set via: wrangler secret put SECRET_NAME
+[vars]
+ENVIRONMENT = "production"
+# JWT_SECRET - Set via: wrangler secret put JWT_SECRET
+# TELEGRAM_BOT_TOKEN - Set via: wrangler secret put TELEGRAM_BOT_TOKEN
+# MAILCHANNELS_API_KEY - Set via: wrangler secret put MAILCHANNELS_API_KEY
+# ENCRYPTION_KEY - Set via: wrangler secret put ENCRYPTION_KEY
+# GOOGLE_CLIENT_SECRET - Set via: wrangler secret put GOOGLE_CLIENT_SECRET
+# APPLE_PRIVATE_KEY - Set via: wrangler secret put APPLE_PRIVATE_KEY
+# APPLE_KEY_ID - Set via: wrangler secret put APPLE_KEY_ID
+# APPLE_TEAM_ID - Set via: wrangler secret put APPLE_TEAM_ID
+
+# TODO: Update these with your actual production URLs
+FRONTEND_URL = "https://your-frontend.pages.dev"
+FROM_EMAIL = "noreply@yourdomain.com"
+

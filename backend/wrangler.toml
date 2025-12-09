@@ -1,0 +1,72 @@
+# Cloudflare Workers Configuration for Upto Backend
+# This configuration includes API Worker and Monitoring Worker
+
+name = "upto-backend"
+main = "src/index.ts"
+compatibility_date = "2024-01-01"
+compatibility_flags = ["nodejs_compat"]
+
+# D1 Database
+[[d1_databases]]
+binding = "DB"
+database_name = "upto-db"
+database_id = "b22fece1-f147-4e9f-81ad-fab7e7897004"
+
+# KV Namespaces
+[[kv_namespaces]]
+binding = "STATUS_SNAPSHOTS"
+id = "229f00d270ae4171b0a238e69f8d8f92"
+
+[[kv_namespaces]]
+binding = "STATUS_PAGE_CACHE"
+id = "f94de7911c144a2c8134884495181778"
+
+[[kv_namespaces]]
+binding = "RATE_LIMIT_STORE"
+id = "57979d3b3a874c5b92603ac4a35c067e"
+
+# Durable Objects - Temporarily disabled for initial deployment
+# [[durable_objects.bindings]]
+# name = "SERVICE_STATE"
+# class_name = "ServiceStateObject"
+# script_name = "upto-backend"
+
+# Queues - Requires Workers Paid plan
+# [[queues.producers]]
+# queue = "monitoring-queue"
+# binding = "MONITORING_QUEUE"
+
+# [[queues.consumers]]
+# queue = "monitoring-queue"
+# max_batch_size = 10
+# max_batch_timeout = 5
+# max_retries = 3
+
+# R2 Buckets - Requires R2 to be enabled in Dashboard
+# [[r2_buckets]]
+# binding = "STATIC_ASSETS"
+# bucket_name = "upto-static-assets"
+
+# Cron Triggers
+[triggers]
+crons = ["*/1 * * * *"] # Every minute
+
+# Environment variables
+[vars]
+ENVIRONMENT = "production"
+# JWT_SECRET - Set via: wrangler secret put JWT_SECRET
+# TELEGRAM_BOT_TOKEN - Set via: wrangler secret put TELEGRAM_BOT_TOKEN
+# MAILCHANNELS_API_KEY - Set via: wrangler secret put MAILCHANNELS_API_KEY
+# ENCRYPTION_KEY - Set via: wrangler secret put ENCRYPTION_KEY
+FRONTEND_URL = "https://c1477c58.upto-frontend.pages.dev"
+FROM_EMAIL = "noreply@upto.dev"  # TODO: Update with your verified domain
+
+# Development environment
+[env.development]
+vars = { ENVIRONMENT = "development" }
+
+[env.development.d1_databases]
+binding = "DB"
+database_name = "upto-db-dev"
+database_id = "" # Will be set after creating the database
+

@@ -1,0 +1,24 @@
+{
+  "name": "upto-backend",
+  "version": "1.0.0",
+  "description": "Upto Backend - Cloudflare Workers API and Monitoring Engine",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "migrate": "wrangler d1 migrations apply upto-db",
+    "migrate:dev": "wrangler d1 migrations apply upto-db-dev --env development",
+    "seed": "wrangler d1 execute upto-db --file=../infrastructure/migrations/0002_seed_data.sql",
+    "seed:dev": "wrangler d1 execute upto-db-dev --file=../infrastructure/migrations/0002_seed_data.sql --env development"
+  },
+  "dependencies": {
+    "@cloudflare/workers-types": "^4.20240117.0",
+    "hono": "^4.0.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240117.0",
+    "typescript": "^5.3.3",
+    "wrangler": "^3.19.0"
+  }
+}
+
