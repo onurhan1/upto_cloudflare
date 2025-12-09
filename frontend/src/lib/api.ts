@@ -220,6 +220,22 @@ class ApiClient {
     });
   }
 
+  async addIncidentUpdate(id: string, update: { message: string; status: string }) {
+    // Use updateIncident endpoint to add update
+    return this.request<any>(`/incidents/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(update),
+    });
+  }
+
+  async resolveIncident(id: string) {
+    // Use updateIncident endpoint to resolve
+    return this.request<any>(`/incidents/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ status: 'resolved' }),
+    });
+  }
+
   // Status Pages
   async getStatusPages() {
     return this.request<{ pages: any[] }>('/status-page/mine');
