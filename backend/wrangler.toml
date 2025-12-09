@@ -1,7 +1,7 @@
 # Cloudflare Workers Configuration for Upto Backend
 # This configuration includes API Worker and Monitoring Worker
 
-name = "upto-backend"
+name = "uptocloudflare2"
 main = "src/index.ts"
 compatibility_date = "2024-01-01"
 compatibility_flags = ["nodejs_compat"]
@@ -25,11 +25,10 @@ id = "f94de7911c144a2c8134884495181778"
 binding = "RATE_LIMIT_STORE"
 id = "57979d3b3a874c5b92603ac4a35c067e"
 
-# Durable Objects - Temporarily disabled for initial deployment
-# [[durable_objects.bindings]]
-# name = "SERVICE_STATE"
-# class_name = "ServiceStateObject"
-# script_name = "upto-backend"
+# Durable Objects
+[[durable_objects.bindings]]
+name = "SERVICE_STATE"
+class_name = "ServiceStateObject"
 
 # Queues - Requires Workers Paid plan
 # [[queues.producers]]
@@ -58,7 +57,7 @@ ENVIRONMENT = "production"
 # TELEGRAM_BOT_TOKEN - Set via: wrangler secret put TELEGRAM_BOT_TOKEN
 # MAILCHANNELS_API_KEY - Set via: wrangler secret put MAILCHANNELS_API_KEY
 # ENCRYPTION_KEY - Set via: wrangler secret put ENCRYPTION_KEY
-FRONTEND_URL = "https://uptocloudflare2.pages.dev"
+FRONTEND_URL = "https://uptocloudflare2-frontend.pages.dev"
 FROM_EMAIL = "noreply@upto.dev"  # TODO: Update with your verified domain
 
 # Development environment
@@ -69,4 +68,9 @@ vars = { ENVIRONMENT = "development" }
 binding = "DB"
 database_name = "upto-db-dev"
 database_id = "" # Will be set after creating the database
+
+# Durable Object Migrations
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["ServiceStateObject"]
 

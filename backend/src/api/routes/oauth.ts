@@ -16,12 +16,12 @@ function buildRedirectUri(c: any): string {
   // For localhost, always use http://localhost:8787 (exact match required)
   const host = c.req.header('Host') || 'localhost:8787';
   const isLocalhost = host.includes('localhost') || host.includes('127.0.0.1');
-  
+
   if (isLocalhost) {
     // For localhost, always use http://localhost:8787 (not https, not 127.0.0.1)
     return 'http://localhost:8787/oauth/google/callback';
   }
-  
+
   // For production, use the actual protocol and host
   const protocol = c.req.header('X-Forwarded-Proto') || 'https';
   return `${protocol}://${host}/oauth/google/callback`;
@@ -34,7 +34,7 @@ function buildRedirectUri(c: any): string {
 oauth.get('/google', async (c) => {
   const clientId = c.env.GOOGLE_CLIENT_ID;
   const env = c.env.ENVIRONMENT || 'development';
-  
+
   // Build redirect URI - must be consistent with callback
   const redirectUri = c.req.query('redirect_uri') || buildRedirectUri(c);
   const state = c.req.query('state') || generateUUID();
@@ -42,14 +42,14 @@ oauth.get('/google', async (c) => {
   // Development mode: Allow mock OAuth if no credentials
   if ((!clientId || clientId === '') && env === 'development') {
     // Mock OAuth for development - create a test user directly
-    const frontendUrl = c.req.query('frontend_url') || 'http://localhost:3000';
+    const frontendUrl = c.req.query('frontend_url') || c.env.FRONTEND_URL || 'http://localhost:3000';
     const db = c.env.DB;
-    
+
     // Create a mock Google user
     const mockEmail = `google_test_${Date.now()}@example.com`;
     const userId = generateUUID();
     const now = Math.floor(Date.now() / 1000);
-    
+
     // Check if test user exists
     let user = await db
       .prepare('SELECT * FROM users WHERE email = ?')
@@ -60,7 +60,7 @@ oauth.get('/google', async (c) => {
         name: string;
         role: string;
       }>();
-    
+
     if (!user) {
       await db
         .prepare(
@@ -68,7 +68,7 @@ oauth.get('/google', async (c) => {
         )
         .bind(userId, mockEmail, '', 'Google Test User', 'user', now, now)
         .run();
-      
+
       // Create default integration
       const integrationId = generateUUID();
       await db
@@ -77,7 +77,7 @@ oauth.get('/google', async (c) => {
         )
         .bind(integrationId, userId, mockEmail, 1, now, now)
         .run();
-      
+
       user = {
         id: userId,
         email: mockEmail,
@@ -85,10 +85,10 @@ oauth.get('/google', async (c) => {
         role: 'user',
       };
     }
-    
+
     // Generate token
     const token = await generateToken(user.id, user.email, user.role, c.env.JWT_SECRET);
-    
+
     // Redirect to frontend with token
     return c.redirect(`${frontendUrl}/auth/callback?token=${token}&provider=google&mock=true`);
   }
@@ -98,7 +98,7 @@ oauth.get('/google', async (c) => {
     const acceptHeader = c.req.header('Accept') || '';
     const userAgent = c.req.header('User-Agent') || '';
     const isBrowser = acceptHeader.includes('text/html') || userAgent.includes('Mozilla');
-    
+
     if (isBrowser) {
       return c.html(`
         <!DOCTYPE html>
@@ -248,7 +248,7 @@ oauth.get('/google/callback', async (c) => {
 
   const clientId = c.env.GOOGLE_CLIENT_ID;
   const clientSecret = c.env.GOOGLE_CLIENT_SECRET;
-  
+
   // Build redirect URI - must match EXACTLY what was sent to Google
   // Use the same helper function to ensure consistency
   const redirectUri = buildRedirectUri(c);
@@ -358,7 +358,7 @@ oauth.get('/google/callback', async (c) => {
     const token = await generateToken(user.id, user.email, user.role, c.env.JWT_SECRET);
 
     // Redirect to frontend with token
-    const frontendUrl = c.req.query('frontend_url') || 'http://localhost:3000';
+    const frontendUrl = c.req.query('frontend_url') || c.env.FRONTEND_URL || 'http://localhost:3000';
     return c.redirect(`${frontendUrl}/auth/callback?token=${token}&provider=google`);
   } catch (error: any) {
     console.error('Google OAuth error:', error);
@@ -423,7 +423,7 @@ oauth.post('/apple/callback', async (c) => {
   try {
     // Import Apple JWT utility
     const { generateAppleClientSecret, verifyAppleIdToken } = await import('../../utils/apple-jwt');
-    
+
     // Generate client secret JWT
     let clientSecret: string;
     try {
@@ -461,11 +461,11 @@ oauth.post('/apple/callback', async (c) => {
       id_token?: string;
       refresh_token?: string;
     }>();
-    
+
     // Verify and extract user info from ID token
     let userEmail: string | null = null;
     let userName: string | null = null;
-    
+
     if (tokenData.id_token) {
       const verifiedToken = await verifyAppleIdToken(tokenData.id_token);
       if (verifiedToken) {
@@ -474,11 +474,11 @@ oauth.post('/apple/callback', async (c) => {
         // For subsequent requests, we'll use email or a default
       }
     }
-    
+
     const db = c.env.DB;
     const userId = generateUUID();
     const userNow = Math.floor(Date.now() / 1000);
-    
+
     // Use email from token, or generate a unique one
     const email = userEmail || `apple_${Date.now()}@apple.local`;
 
@@ -521,7 +521,7 @@ oauth.post('/apple/callback', async (c) => {
 
     const token = await generateToken(user.id, user.email, user.role, c.env.JWT_SECRET);
 
-    const frontendUrl = c.req.query('frontend_url') || 'http://localhost:3000';
+    const frontendUrl = c.req.query('frontend_url') || c.env.FRONTEND_URL || 'http://localhost:3000';
     return c.redirect(`${frontendUrl}/auth/callback?token=${token}&provider=apple`);
   } catch (error: any) {
     console.error('Apple OAuth error:', error);

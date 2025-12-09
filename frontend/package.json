@@ -9,7 +9,7 @@
     "start": "next start",
     "lint": "next lint",
     "pages:build": "npm run build && npx @cloudflare/next-on-pages",
-    "pages:deploy": "npm run pages:build && wrangler pages deploy .vercel/output/static --project-name=upto-frontend",
+    "pages:deploy": "npm run pages:build && wrangler pages deploy .vercel/output/static --project-name=uptocloudflare2-frontend",
     "cf-pages:build": "npm run build && npx @cloudflare/next-on-pages"
   },
   "dependencies": {
@@ -46,6 +46,7 @@
     "autoprefixer": "^10.4.17",
     "postcss": "^8.4.33",
     "tailwindcss": "^3.4.1",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "wrangler": "^3.114.15"
   }
 }

@@ -66,10 +66,11 @@ export async function corsMiddleware(c: Context, next: Next) {
   const allowedOrigins = [
     'http://localhost:3000',
     'https://upto.pages.dev',
-    // Add your production frontend URL here
+    'https://uptocloudflare2-frontend.pages.dev',
   ];
 
-  if (origin && allowedOrigins.includes(origin)) {
+  // Allow all pages.dev subdomains for preview deployments
+  if (origin && (allowedOrigins.includes(origin) || origin.endsWith('.pages.dev'))) {
     c.header('Access-Control-Allow-Origin', origin);
   }
 

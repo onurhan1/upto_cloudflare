@@ -1,10 +1,4 @@
-name = "upto-frontend"
+name = "uptocloudflare2-frontend"
 compatibility_date = "2024-01-01"
-
-[build]
-command = "npm run build && npx @cloudflare/next-on-pages"
-cwd = "."
-
-[env.production]
-name = "upto-frontend"
-
+compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = ".vercel/output/static"

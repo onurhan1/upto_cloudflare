@@ -182,6 +182,7 @@ export interface Env {
   APPLE_PRIVATE_KEY: string;
   OPENAI_API_KEY?: string;
   ENCRYPTION_KEY?: string; // Encryption key for API keys (256-bit, base64 encoded)
+  FRONTEND_URL: string;
 }
 
 export interface ServiceState {
