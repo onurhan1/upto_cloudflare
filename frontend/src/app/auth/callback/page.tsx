@@ -3,10 +3,12 @@
 import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { api } from '@/lib/api';
+import { useOrganization } from '@/contexts/OrganizationContext';
 
 function AuthCallbackContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { refreshOrganizations } = useOrganization();
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -14,16 +16,25 @@ function AuthCallbackContent() {
     const provider = searchParams.get('provider');
 
     if (token) {
-      // Save token and redirect to dashboard
+      // Save token
       api.setToken(token);
-      router.push('/dashboard');
+
+      // Refresh organizations to ensure context is updated
+      refreshOrganizations().then(() => {
+        // Redirect to dashboard
+        router.push('/dashboard');
+      }).catch((err) => {
+        console.error('Failed to refresh organizations:', err);
+        // Redirect anyway, dashboard might handle it or show empty state
+        router.push('/dashboard');
+      });
     } else {
       setError('Authentication failed. No token received.');
       setTimeout(() => {
         router.push('/login');
       }, 3000);
     }
-  }, [searchParams, router]);
+  }, [searchParams, router, refreshOrganizations]);
 
   if (error) {
     return (
