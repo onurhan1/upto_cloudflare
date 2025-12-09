@@ -1,10 +1,19 @@
-export const runtime = 'edge';
+'use client';
 
-import InvitationAcceptClient from './InvitationAcceptClient';
+import { useEffect, useState } from 'react';
+
+import { useRouter, useParams } from 'next/navigation';
+import { api } from '@/lib/api';
+import MainLayout from '@/components/layout/MainLayout';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Badge } from '@/components/ui/badge';
+import { CheckCircle, XCircle, Mail } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 export default function InvitationAcceptPage() {
-  return <InvitationAcceptClient />;
-}
   const router = useRouter();
   const params = useParams();
   const { toast } = useToast();

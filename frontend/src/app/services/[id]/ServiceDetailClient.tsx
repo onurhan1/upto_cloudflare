@@ -1,10 +1,29 @@
-export const runtime = 'edge';
+'use client';
 
-import ServiceDetailClient from './ServiceDetailClient';
+import { useEffect, useState } from 'react';
+
+import { useRouter, useParams } from 'next/navigation';
+import Link from 'next/link';
+import { api } from '@/lib/api';
+import MainLayout from '@/components/layout/MainLayout';
+import { ArrowLeft, Play, Activity, Clock, AlertTriangle, CheckCircle, XCircle, Settings, BarChart3, FileText, Sparkles } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { useToast } from '@/hooks/use-toast';
+import { formatDistanceToNow } from 'date-fns';
 
 export default function ServiceDetailPage() {
-  return <ServiceDetailClient />;
-}
   const router = useRouter();
   const params = useParams();
   const { toast } = useToast();

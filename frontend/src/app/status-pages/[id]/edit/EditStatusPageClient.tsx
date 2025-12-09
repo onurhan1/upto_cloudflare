@@ -1,10 +1,15 @@
-export const runtime = 'edge';
+'use client';
 
-import EditStatusPageClient from './EditStatusPageClient';
+import { useEffect, useState } from 'react';
+
+import { useRouter, useParams } from 'next/navigation';
+import Link from 'next/link';
+import { api } from '@/lib/api';
+import MainLayout from '@/components/layout/MainLayout';
+import { ArrowLeft, Plus } from 'lucide-react';
+import { useOrganization } from '@/contexts/OrganizationContext';
 
 export default function EditStatusPagePage() {
-  return <EditStatusPageClient />;
-}
   const router = useRouter();
   const params = useParams();
   const { currentOrganization } = useOrganization();

@@ -1,10 +1,17 @@
-export const runtime = 'edge';
+'use client';
 
-import PublicStatusPageClient from './PublicStatusPageClient';
+import { useEffect, useState } from 'react';
+import { useParams } from 'next/navigation';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
+import { CheckCircle, XCircle, AlertTriangle, Activity, Clock } from 'lucide-react';
+import { formatDistanceToNow } from 'date-fns';
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8787';
+
 
 export default function PublicStatusPage() {
-  return <PublicStatusPageClient />;
-}
   const params = useParams();
   const slug = params.slug as string;
   const [data, setData] = useState<any>(null);
