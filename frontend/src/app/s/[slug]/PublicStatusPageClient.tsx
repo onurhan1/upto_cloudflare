@@ -8,7 +8,17 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { CheckCircle, XCircle, AlertTriangle, Activity, Clock } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8787';
+// Get API URL with production fallback
+function getApiUrl(): string {
+  const productionApiUrl = 'https://upto-backend.onurhanyilmaz87.workers.dev';
+  const localApiUrl = 'http://localhost:8787';
+  const isProduction = typeof window !== 'undefined' 
+    ? window.location.hostname.includes('pages.dev') || window.location.hostname.includes('cloudflare')
+    : false;
+  return process.env.NEXT_PUBLIC_API_URL || (isProduction ? productionApiUrl : localApiUrl);
+}
+
+const API_URL = getApiUrl();
 
 
 export default function PublicStatusPage() {

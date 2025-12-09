@@ -35,13 +35,25 @@ export default function RegisterPage() {
   };
 
   const handleGoogleLogin = () => {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8787';
+    // Production backend URL with fallback
+    const productionApiUrl = 'https://upto-backend.onurhanyilmaz87.workers.dev';
+    const localApiUrl = 'http://localhost:8787';
+    const isProduction = typeof window !== 'undefined' 
+      ? window.location.hostname.includes('pages.dev') || window.location.hostname.includes('cloudflare')
+      : false;
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || (isProduction ? productionApiUrl : localApiUrl);
     const frontendUrl = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000';
     window.location.href = `${apiUrl}/oauth/google?frontend_url=${encodeURIComponent(frontendUrl)}`;
   };
 
   const handleAppleLogin = () => {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8787';
+    // Production backend URL with fallback
+    const productionApiUrl = 'https://upto-backend.onurhanyilmaz87.workers.dev';
+    const localApiUrl = 'http://localhost:8787';
+    const isProduction = typeof window !== 'undefined' 
+      ? window.location.hostname.includes('pages.dev') || window.location.hostname.includes('cloudflare')
+      : false;
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || (isProduction ? productionApiUrl : localApiUrl);
     const frontendUrl = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000';
     window.location.href = `${apiUrl}/oauth/apple?frontend_url=${encodeURIComponent(frontendUrl)}`;
   };

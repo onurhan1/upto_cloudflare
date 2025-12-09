@@ -2,12 +2,21 @@
 
 // Get API URL - safe for both SSR and client-side
 function getApiUrl(): string {
+  // Production backend URL
+  const productionApiUrl = 'https://upto-backend.onurhanyilmaz87.workers.dev';
+  const localApiUrl = 'http://localhost:8787';
+  
+  // Check if we're in production (Cloudflare Pages)
+  const isProduction = typeof window !== 'undefined' 
+    ? window.location.hostname.includes('pages.dev') || window.location.hostname.includes('cloudflare')
+    : process.env.NODE_ENV === 'production';
+  
   if (typeof window !== 'undefined') {
-    // Client-side: use environment variable or default
-    return process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8787';
+    // Client-side: use environment variable, production URL, or local
+    return process.env.NEXT_PUBLIC_API_URL || (isProduction ? productionApiUrl : localApiUrl);
   }
-  // Server-side: always use default (env vars are available in Next.js)
-  return process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8787';
+  // Server-side: use environment variable, production URL, or local
+  return process.env.NEXT_PUBLIC_API_URL || (isProduction ? productionApiUrl : localApiUrl);
 }
 
 const API_URL = getApiUrl();
