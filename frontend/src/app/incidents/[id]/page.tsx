@@ -1,31 +1,8 @@
-export const runtime = 'edge';
-
-'use client';
-
-import { useEffect, useState } from 'react';
-
-import { useRouter, useParams } from 'next/navigation';
-import Link from 'next/link';
-import { api } from '@/lib/api';
-import MainLayout from '@/components/layout/MainLayout';
-import { ArrowLeft, Clock, AlertTriangle, CheckCircle, MessageSquare, Sparkles } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Textarea } from '@/components/ui/textarea';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { useToast } from '@/hooks/use-toast';
-import { formatDistanceToNow } from 'date-fns';
+import IncidentDetailClient from './IncidentDetailClient';
 
 export default function IncidentDetailPage() {
+  return <IncidentDetailClient />;
+}
   const router = useRouter();
   const params = useParams();
   const { toast } = useToast();
