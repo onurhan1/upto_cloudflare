@@ -39,6 +39,8 @@ Thumbs.db
 # Wrangler
 .wrangler/
 .dev.vars
+wrangler.local.toml
+backend/wrangler.local.toml
 
 # TypeScript
 *.tsbuildinfo
