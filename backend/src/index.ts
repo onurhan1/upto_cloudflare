@@ -458,7 +458,7 @@ async function checkHttp(
       status,
       responseTime,
       statusCode,
-      errorMessage: null,
+      errorMessage: responseTime > 3000 ? 'High Response Time' : null,
     };
   } catch (error: any) {
     clearTimeout(timeout);

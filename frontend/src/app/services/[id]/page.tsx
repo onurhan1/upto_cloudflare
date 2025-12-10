@@ -1,7 +1,12 @@
 export const runtime = 'edge';
 
-import ServiceDetailClient from './ServiceDetailClient';
+import ServiceDetailWrapper from './ServiceDetailWrapper';
 
-export default function ServiceDetailPage() {
-  return <ServiceDetailClient />;
+export default async function ServiceDetailPage(props: { params: Promise<{ id: string }> }) {
+  await props.params;
+  return <ServiceDetailWrapper />;
 }
+
+
+
+
